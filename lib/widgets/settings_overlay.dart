@@ -75,7 +75,7 @@ class SettingsOverlay extends StatelessWidget {
           decoration: BoxDecoration(
             border: Border(
               bottom: BorderSide(
-                color: isSelected ? Colors.red : Colors.transparent,
+                color: isSelected ? Color(0xffAA0000) : Colors.transparent,
                 width: 2,
               ),
             ),
@@ -84,7 +84,7 @@ class SettingsOverlay extends StatelessWidget {
             child: Text(
               title,
               style: TextStyle(
-                color: isSelected ? Colors.red : Colors.white70,
+                color: isSelected ? Color(0xffAA0000) : Colors.white70,
                 fontSize: 14,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
@@ -131,7 +131,7 @@ class SettingsOverlay extends StatelessWidget {
           title: Text(
             quality.label,
             style: TextStyle(
-              color: isSelected ? Colors.red : Colors.white,
+              color: isSelected ? Color(0xffAA0000) : Colors.white,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
             ),
           ),
@@ -140,7 +140,7 @@ class SettingsOverlay extends StatelessWidget {
             style: const TextStyle(color: Colors.white70),
           ),
           trailing: isSelected
-              ? const Icon(Icons.check, color: Colors.red)
+              ? const Icon(Icons.check, color: Color(0xffAA0000))
               : null,
           onTap: () {
             provider.setQuality(quality);
@@ -176,12 +176,12 @@ class SettingsOverlay extends StatelessWidget {
             title: Text(
               'Off',
               style: TextStyle(
-                color: isSelected ? Colors.red : Colors.white,
+                color: isSelected ? Color(0xffAA0000) : Colors.white,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
             ),
             trailing: isSelected
-                ? const Icon(Icons.check, color: Colors.red)
+                ? const Icon(Icons.check, color: Color(0xffAA0000))
                 : null,
             onTap: () {
               provider.setSubtitleTrack(null);
@@ -197,7 +197,7 @@ class SettingsOverlay extends StatelessWidget {
           title: Text(
             subtitle.language,
             style: TextStyle(
-              color: isSelected ? Colors.red : Colors.white,
+              color: isSelected ? Color(0xffAA0000) : Colors.white,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
             ),
           ),
@@ -206,7 +206,7 @@ class SettingsOverlay extends StatelessWidget {
             style: const TextStyle(color: Colors.white70),
           ),
           trailing: isSelected
-              ? const Icon(Icons.check, color: Colors.red)
+              ? const Icon(Icons.check, color: Color(0xffAA0000))
               : null,
           onTap: () {
             provider.setSubtitleTrack(subtitle);
@@ -238,7 +238,7 @@ class SettingsOverlay extends StatelessWidget {
           title: Text(
             audioTrack.language,
             style: TextStyle(
-              color: isSelected ? Colors.red : Colors.white,
+              color: isSelected ? Color(0xffAA0000) : Colors.white,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
             ),
           ),
@@ -247,7 +247,7 @@ class SettingsOverlay extends StatelessWidget {
             style: const TextStyle(color: Colors.white70),
           ),
           trailing: isSelected
-              ? const Icon(Icons.check, color: Colors.red)
+              ? const Icon(Icons.check, color: Color(0xffAA0000))
               : null,
           onTap: () {
             provider.setAudioTrack(audioTrack);
@@ -272,7 +272,7 @@ class SettingsOverlay extends StatelessWidget {
           title: Text(
             '${speed}x',
             style: TextStyle(
-              color: isSelected ? Colors.red : Colors.white,
+              color: isSelected ? Color(0xffAA0000) : Colors.white,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
             ),
           ),
@@ -281,7 +281,7 @@ class SettingsOverlay extends StatelessWidget {
             style: const TextStyle(color: Colors.white70),
           ),
           trailing: isSelected
-              ? const Icon(Icons.check, color: Colors.red)
+              ? const Icon(Icons.check, color: Color(0xffAA0000))
               : null,
           onTap: () {
             provider.setPlaybackSpeed(speed);

@@ -71,7 +71,7 @@ class _SimpleVideoPlayerState extends State<SimpleVideoPlayer> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircularProgressIndicator(color: Colors.red),
+                  CircularProgressIndicator(color: Color(0xffAA0000)),
                   SizedBox(height: 16),
                   Text(
                     'Initializing video controller...',
@@ -87,7 +87,7 @@ class _SimpleVideoPlayerState extends State<SimpleVideoPlayer> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircularProgressIndicator(color: Colors.red),
+                  CircularProgressIndicator(color: Color(0xffAA0000)),
                   SizedBox(height: 16),
                   Text(
                     'Loading video...',
@@ -169,7 +169,7 @@ class _SimpleVideoPlayerState extends State<SimpleVideoPlayer> {
                     if (videoValue.hasError)
                       Text(
                         'Error: ${videoValue.errorDescription}',
-                        style: const TextStyle(color: Colors.red, fontSize: 12),
+                        style: const TextStyle(color:  Color(0xffAA0000), fontSize: 12),
                       ),
                   ],
                 ),

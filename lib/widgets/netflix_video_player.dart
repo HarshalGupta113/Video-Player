@@ -83,7 +83,7 @@ class _NetflixVideoPlayerState extends State<NetflixVideoPlayer> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      CircularProgressIndicator(color: Colors.red),
+                      CircularProgressIndicator(color: Color(0xffAA0000)),
                       SizedBox(height: 16),
                       Text(
                         'Loading video...',
@@ -121,7 +121,7 @@ class _NetflixVideoPlayerState extends State<NetflixVideoPlayer> {
                   if (provider.isBuffering)
                     const Center(
                       child: CircularProgressIndicator(
-                        color: Colors.red,
+                        color:  Color(0xffAA0000),
                         strokeWidth: 3,
                       ),
                     ),

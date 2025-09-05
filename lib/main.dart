@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       title: 'Video Player',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.red,
+          seedColor: Color(0xffAA0000),
           brightness: Brightness.dark,
         ),
         useMaterial3: true,
@@ -70,7 +70,7 @@ class VideoPlayerDemo extends StatelessWidget {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
-                      child: CircularProgressIndicator(color: Colors.red),
+                      child: CircularProgressIndicator(color: Color(0xffAA0000)),
                     );
                   }
 
@@ -81,7 +81,7 @@ class VideoPlayerDemo extends StatelessWidget {
                         children: [
                           const Icon(
                             Icons.error_outline,
-                            color: Colors.red,
+                            color:  Color(0xffAA0000),
                             size: 48,
                           ),
                           const SizedBox(height: 16),
@@ -202,14 +202,14 @@ class VideoPlayerDemo extends StatelessWidget {
                       children: [
                         const Icon(
                           Icons.play_circle_outline,
-                          color: Colors.red,
+                          color:  Color(0xffAA0000),
                           size: 20,
                         ),
                         const SizedBox(width: 4),
                         Text(
                           '${episodes.length} episodes',
                           style: const TextStyle(
-                            color: Colors.red,
+                            color:  Color(0xffAA0000),
                             fontSize: 12,
                           ),
                         ),
@@ -246,7 +246,7 @@ class VideoPlayerDemo extends StatelessWidget {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return const Center(
-          child: CircularProgressIndicator(color: Colors.red),
+          child: CircularProgressIndicator(color: Color(0xffAA0000)),
         );
       },
     );
@@ -296,7 +296,7 @@ class VideoPlayerDemo extends StatelessWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Failed to load video qualities: $e'),
-            backgroundColor: Colors.red,
+            backgroundColor:  Color(0xffAA0000),
           ),
         );
 

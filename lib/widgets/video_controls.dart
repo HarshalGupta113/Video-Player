@@ -126,10 +126,10 @@ class VideoControls extends StatelessWidget {
               icon: const Icon(Icons.list, color: Colors.white, size: 28),
             ),
           // Settings Button
-          IconButton(
-            onPressed: () => provider.showSettings(),
-            icon: const Icon(Icons.settings, color: Colors.white, size: 24),
-          ),
+          // IconButton(
+          //   onPressed: () => provider.showSettings(),
+          //   icon: const Icon(Icons.settings, color: Colors.white, size: 24),
+          // ),
         ],
       ),
     );
@@ -266,9 +266,9 @@ class VideoControls extends StatelessWidget {
       children: [
         SliderTheme(
           data: SliderTheme.of(context).copyWith(
-            activeTrackColor: Colors.red,
+            activeTrackColor:  Color(0xffAA0000),
             inactiveTrackColor: Colors.white30,
-            thumbColor: Colors.red,
+            thumbColor:  Color(0xffAA0000),
             thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
             overlayShape: const RoundSliderOverlayShape(overlayRadius: 12),
           ),
@@ -327,20 +327,20 @@ class VideoControls extends StatelessWidget {
             onPressed: () => provider.toggleLike(),
             icon: Icon(
               provider.isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
-              color: provider.isLiked ? Colors.red : Colors.white,
+              color: provider.isLiked ? Color(0xffAA0000) : Colors.white,
               size: ResponsiveSpacing.getIconSize(context),
             ),
           ),
-          IconButton(
-            onPressed: () => provider.toggleDislike(),
-            icon: Icon(
-              provider.isDisliked
-                  ? Icons.thumb_down
-                  : Icons.thumb_down_outlined,
-              color: provider.isDisliked ? Colors.red : Colors.white,
-              size: ResponsiveSpacing.getIconSize(context),
-            ),
-          ),
+          // IconButton(
+          //   onPressed: () => provider.toggleDislike(),
+          //   icon: Icon(
+          //     provider.isDisliked
+          //         ? Icons.thumb_down
+          //         : Icons.thumb_down_outlined,
+          //     color: provider.isDisliked ? Color(0xffAA0000) : Colors.white,
+          //     size: ResponsiveSpacing.getIconSize(context),
+          //   ),
+          // ),
         ],
       ),
     );
@@ -405,7 +405,7 @@ class VideoControls extends StatelessWidget {
         onPressed: () => provider.showSettings(tab: 'subtitles'),
         icon: Icon(
           Icons.closed_caption,
-          color: provider.settings.subtitlesEnabled ? Colors.red : Colors.white,
+          color: provider.settings.subtitlesEnabled ? Color(0xffAA0000) : Colors.white,
           size: ResponsiveSpacing.getIconSize(context),
         ),
       ),
@@ -457,7 +457,7 @@ class VideoControls extends StatelessWidget {
                 '${speed}x',
                 style: TextStyle(
                   color: provider.settings.playbackSpeed == speed
-                      ? Colors.red
+                      ? Color(0xffAA0000)
                       : Colors.white,
                 ),
               ),

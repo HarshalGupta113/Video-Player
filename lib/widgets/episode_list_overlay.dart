@@ -102,11 +102,11 @@ class EpisodeListOverlay extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: isCurrentEpisode
-            ? Colors.red.withOpacity(0.1)
+            ? Color(0xffAA0000).withOpacity(0.1)
             : Colors.grey[900],
         borderRadius: BorderRadius.circular(8),
         border: isCurrentEpisode
-            ? Border.all(color: Colors.red, width: 1)
+            ? Border.all(color:  Color(0xffAA0000), width: 1)
             : null,
       ),
       child: InkWell(
@@ -150,7 +150,7 @@ class EpisodeListOverlay extends StatelessWidget {
                       Center(
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.red,
+                            color:  Color(0xffAA0000),
                             shape: BoxShape.circle,
                           ),
                           padding: const EdgeInsets.all(8),
@@ -197,7 +197,7 @@ class EpisodeListOverlay extends StatelessWidget {
                               episode.duration.inMilliseconds,
                           backgroundColor: Colors.grey[600],
                           valueColor: const AlwaysStoppedAnimation<Color>(
-                            Colors.red,
+                             Color(0xffAA0000),
                           ),
                           minHeight: 2,
                         ),
@@ -217,7 +217,7 @@ class EpisodeListOverlay extends StatelessWidget {
                     Text(
                       'Episode ${episode.episodeNumber}',
                       style: TextStyle(
-                        color: isCurrentEpisode ? Colors.red : Colors.white70,
+                        color: isCurrentEpisode ? Color(0xffAA0000) : Colors.white70,
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                       ),
@@ -226,7 +226,7 @@ class EpisodeListOverlay extends StatelessWidget {
                     Text(
                       episode.title,
                       style: TextStyle(
-                        color: isCurrentEpisode ? Colors.red : Colors.white,
+                        color: isCurrentEpisode ? Color(0xffAA0000) : Colors.white,
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                       ),
