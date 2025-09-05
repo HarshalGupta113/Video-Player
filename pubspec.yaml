@@ -66,6 +66,7 @@ dependencies:
 
   # Responsive design
   responsive_framework: ^1.4.0
+  video_player_web_hls: ^1.3.0
 
 dev_dependencies:
   flutter_test:

@@ -169,7 +169,7 @@ class VideoPlayerProvider extends ChangeNotifier {
       debugPrint('Video initialization completed successfully');
       notifyListeners();
     } catch (e) {
-      debugPrint('Error initializing video: $e');
+      debugPrint('Error initializing video here: $e');
       // Notify listeners even on error so UI can show error state
       notifyListeners();
     }
