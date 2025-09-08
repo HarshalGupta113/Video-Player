@@ -4,9 +4,11 @@ import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'dart:async';
 import '../providers/video_player_provider.dart';
+import '../providers/connectivity_provider.dart';
 import '../models/video_model.dart';
 import 'video_controls.dart';
 import 'settings_overlay.dart';
+import 'connectivity_wrapper.dart';
 
 class NetflixVideoPlayer extends StatefulWidget {
   final VideoModel video;
@@ -29,19 +31,22 @@ class NetflixVideoPlayer extends StatefulWidget {
 class _NetflixVideoPlayerState extends State<NetflixVideoPlayer> {
   late VideoPlayerProvider _videoPlayerProvider;
 
-  // --- Added state for double-tap handling ---
+  // --- Double-tap handling ---
   TapDownDetails? _lastTapDown;
   bool _showLeftSeekIndicator = false;
   bool _showRightSeekIndicator = false;
   Timer? _indicatorTimer;
-  // --- end added ---
 
   @override
   void initState() {
     super.initState();
     _videoPlayerProvider = VideoPlayerProvider();
+    
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _initializePlayer();
+      final connectivity = Provider.of<ConnectivityProvider>(context, listen: false);
+      if (connectivity.isConnected) {
+        _initializePlayer();
+      }
       if (widget.autoStartInLandscape) {
         _setLandscapeMode();
       }
@@ -75,125 +80,179 @@ class _NetflixVideoPlayerState extends State<NetflixVideoPlayer> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<VideoPlayerProvider>.value(
       value: _videoPlayerProvider,
-      child: PopScope(
-        canPop: false, // Handle back button manually
-        onPopInvoked: (didPop) async {
-          if (didPop) return;
-          await _handleBackNavigation();
-        },
-        child: Scaffold(
-          backgroundColor: Colors.black,
-          body: Consumer<VideoPlayerProvider>(
-            builder: (context, provider, child) {
-              if (provider.controller == null ||
-                  !provider.controller!.value.isInitialized) {
-                return const Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircularProgressIndicator(color: Color(0xffAA0000)),
-                      SizedBox(height: 16),
-                      Text(
-                        'Loading video...',
-                        style: TextStyle(color: Colors.white, fontSize: 14),
-                      ),
-                    ],
-                  ),
-                );
-              }
-
-              return Stack(
-                children: [
-                  GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    onTapDown: (d) => _lastTapDown = d,
-                    onTap: () => provider.toggleControls(),
-                    onDoubleTap: () => _handleDoubleTap(provider),
-                    child: Container(
-                      width: double.infinity,
-                      height: double.infinity,
-                      color: Colors.black,
-                      child: Center(
-                        child: AspectRatio(
-                          aspectRatio:
-                              provider.controller!.value.aspectRatio > 0
-                                  ? provider.controller!.value.aspectRatio
-                                  : 16 / 9,
-                          child: VideoPlayer(provider.controller!),
+      child: ConnectivityWrapper(
+        offlineWidget: _buildOfflinePlayerWidget(),
+        child: PopScope(
+          canPop: false,
+          onPopInvoked: (didPop) async {
+            if (didPop) return;
+            await _handleBackNavigation();
+          },
+          child: Scaffold(
+            backgroundColor: Colors.black,
+            body: Consumer<VideoPlayerProvider>(
+              builder: (context, provider, child) {
+                if (provider.controller == null ||
+                    !provider.controller!.value.isInitialized) {
+                  return const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(color: Color(0xffAA0000)),
+                        SizedBox(height: 16),
+                        Text(
+                          'Loading video...',
+                          style: TextStyle(color: Colors.white, fontSize: 14),
                         ),
-                      ),
+                      ],
                     ),
-                  ),
+                  );
+                }
 
-                  // Left (rewind) overlay indicator
-                  if (_showLeftSeekIndicator)
-                    Positioned.fill(
-                      child: IgnorePointer(
-                        child: Row(
-                          children: [
-                            Expanded(
-                              flex: 4,
-                              child: Center(
-                                child: Icon(Icons.replay_5,
-                                    color: Colors.white.withOpacity(0.9),
-                                    size: 70),
-                              ),
-                            ),
-                            const Spacer(flex: 6),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                  // Right (forward) overlay indicator
-                  if (_showRightSeekIndicator)
-                    Positioned.fill(
-                      child: IgnorePointer(
-                        child: Row(
-                          children: [
-                            const Spacer(flex: 6),
-                            Expanded(
-                              flex: 4,
-                              child: Center(
-                                child: Icon(Icons.forward_10,
-                                    color: Colors.white.withOpacity(0.9),
-                                    size: 70),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                  // Buffering Indicator
-                  if (provider.isBuffering)
-                    const Center(
-                      child: CircularProgressIndicator(
-                        color: Color(0xffAA0000),
-                        strokeWidth: 3,
-                      ),
-                    ),
-
-                  // Video Controls
-                  if (provider.showControls)
-                    VideoControls(
+                return Stack(
+                  children: [
+                    GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onTapDown: (d) => _lastTapDown = d,
                       onTap: () => provider.toggleControls(),
-                      onBackPressed: _handleBackNavigation,
+                      onDoubleTap: () => _handleDoubleTap(provider),
+                      child: Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        color: Colors.black,
+                        child: Center(
+                          child: AspectRatio(
+                            aspectRatio:
+                                provider.controller!.value.aspectRatio > 0
+                                    ? provider.controller!.value.aspectRatio
+                                    : 16 / 9,
+                            child: VideoPlayer(provider.controller!),
+                          ),
+                        ),
+                      ),
                     ),
 
-                  // Settings Overlay
-                  if (provider.isSettingsVisible)
-                    SettingsOverlay(onClose: () => provider.hideSettings()),
-                ],
-              );
-            },
+                    // Seek indicators
+                    if (_showLeftSeekIndicator)
+                      Positioned.fill(
+                        child: IgnorePointer(
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 4,
+                                child: Center(
+                                  child: Icon(Icons.replay_5,
+                                      color: Colors.white.withOpacity(0.9),
+                                      size: 70),
+                                ),
+                              ),
+                              const Spacer(flex: 6),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                    if (_showRightSeekIndicator)
+                      Positioned.fill(
+                        child: IgnorePointer(
+                          child: Row(
+                            children: [
+                              const Spacer(flex: 6),
+                              Expanded(
+                                flex: 4,
+                                child: Center(
+                                  child: Icon(Icons.forward_10,
+                                      color: Colors.white.withOpacity(0.9),
+                                      size: 70),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                    if (provider.isBuffering)
+                      const Center(
+                        child: CircularProgressIndicator(
+                          color: Color(0xffAA0000),
+                          strokeWidth: 3,
+                        ),
+                      ),
+
+                    if (provider.showControls)
+                      VideoControls(
+                        onTap: () => provider.toggleControls(),
+                        onBackPressed: _handleBackNavigation,
+                      ),
+
+                    if (provider.isSettingsVisible)
+                      SettingsOverlay(onClose: () => provider.hideSettings()),
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ),
     );
   }
 
-  // --- Added methods for double-tap logic ---
+  Widget _buildOfflinePlayerWidget() {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: const Text(
+          '',  
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.wifi_off,
+              color: Colors.white,
+              size: 64,
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'No Internet Connection',
+              style: TextStyle(color: Colors.white, fontSize: 18),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Please connect to the internet to play videos',
+              style: TextStyle(color: Colors.white70, fontSize: 14),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            Consumer<ConnectivityProvider>(
+              builder: (context, connectivity, child) {
+                return ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xffAA0000),
+                  ),
+                  onPressed: connectivity.isConnected ? _initializePlayer : null,
+                  child: Text(
+                    connectivity.isConnected ? 'Try Now' : 'Waiting for connection...',
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Double-tap methods remain the same...
   void _handleDoubleTap(VideoPlayerProvider provider) {
     if (_lastTapDown == null) return;
     final width = MediaQuery.of(context).size.width;
@@ -203,7 +262,7 @@ class _NetflixVideoPlayerState extends State<NetflixVideoPlayer> {
     final rightRegionStart = width * 0.60;
 
     if (dx < leftRegionEnd) {
-      provider.seekBackward(); // uses existing provider method
+      provider.seekBackward();
       _showSeekFeedback(isForward: false);
     } else if (dx > rightRegionStart) {
       provider.seekForward();
@@ -227,15 +286,11 @@ class _NetflixVideoPlayerState extends State<NetflixVideoPlayer> {
       });
     });
   }
-  // --- end added ---
 
   @override
   void dispose() {
     _indicatorTimer?.cancel();
-    // Dispose the local video player provider
     _videoPlayerProvider.dispose();
-
-    // Reset orientation when leaving the player
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,

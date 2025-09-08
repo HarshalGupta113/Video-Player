@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'models/video_model.dart';
 import 'widgets/netflix_video_player.dart';
 import 'utils/m3u8_parser.dart';
+import 'providers/connectivity_provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,17 +25,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Video Player',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Color(0xffAA0000),
-          brightness: Brightness.dark,
-        ),
-        useMaterial3: true,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ConnectivityProvider()),
+       
+      ],
+      child: MaterialApp(
+        title: 'Netflix Video Player',
+        theme: ThemeData.dark(),
+        home: const VideoPlayerDemo(),
+        debugShowCheckedModeBanner: false,
       ),
-      home: const VideoPlayerDemo(),
-      debugShowCheckedModeBanner: false,
     );
   }
 }
